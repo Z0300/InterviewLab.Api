@@ -3,8 +3,15 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# JetBrains Rider / IntelliJ
+.idea/
+
 # dotenv files
 .env
+*.env
+
+#Docker
+compose.override.yaml
 
 # User-specific files
 *.rsuser

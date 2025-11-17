@@ -1,0 +1,30 @@
+﻿services:
+  webapi:
+    image: itl-api
+    environment:
+      DEFAULT_CONNECTION: "${DEFAULT_CONNECTION}"
+    depends_on:
+      - sqlserver
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    ports:
+      - "8000:8080"
+      - "8001:8081"
+    
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+
+volumes:
+  sqlserver_data:
+ 
+
