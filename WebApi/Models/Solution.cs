@@ -4,24 +4,20 @@ namespace WebApi.Models;
 
 public class Solution
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    [Required]
-    public Guid ProblemId { get; set; }
-    public Problem Problem { get; set; } = default!;
+    [Required] public required Guid ProblemId { get; init; }
+    public Problem? Problem { get; init; }
 
-    [Required, MaxLength(30)]
-    public string Language { get; set; } = "csharp";
+    [Required, MaxLength(30)] public string Language { get; set; } = "csharp";
 
-    [Required]
-    public string Code { get; set; } = default!;
+    [Required, MaxLength(5000)] public required string Code { get; set; }
+    [MaxLength(5000)] public string? Explanation { get; set; } // markdown
 
-    public string Explanation { get; set; } = "";
-    public bool IsCanonical { get; set; } = false;
-    public int QualityScore { get; set; } = 0;
+    public bool IsCanonical { get; set; }
+    public int QualityScore { get; set; }
 
-    [MaxLength(100)]
-    public string Source { get; set; } = "";
+    [MaxLength(100)] public string? Source { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 }
