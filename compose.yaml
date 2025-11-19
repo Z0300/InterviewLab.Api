@@ -9,9 +9,10 @@
       context: .
       dockerfile: WebApi/Dockerfile
     ports:
-      - "8000:8080"
-      - "8001:8081"
-    
+      - "5000:8080"
+      - "5001:8081"
+    restart: always
+  
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2025-latest
     container_name: sqlserver
@@ -22,7 +23,6 @@
       - "1433:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
-    restart: always
 
 volumes:
   sqlserver_data:
