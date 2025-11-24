@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Endpoints;
-using WebApi.Models;
+using WebApi.Models.Enums;
 
 namespace WebApi.Features.Problems;
 
 public class UpdateProblem
 {
-    public record Request(string Title, string Description, string Difficulty, string TagsJson);
+    public record Request(string Title, string Company, string Description, Difficulty Difficulty, string[] TagsJson);
 
 
     public sealed class Validator : AbstractValidator<Request>
@@ -22,11 +22,13 @@ public class UpdateProblem
                 .NotEmpty();
 
             RuleFor(x => x.Difficulty)
-                .NotEmpty()
-                .MaximumLength(20);
+                .IsInEnum();
 
-            RuleFor(x => x.TagsJson)
-                .MaximumLength(300);
+            RuleFor(x => x.TagsJson).ChildRules(tags =>
+            {
+                tags.RuleFor(tag => tag)
+                    .NotEmpty();
+            });
         }
     }
 
@@ -59,6 +61,7 @@ public class UpdateProblem
             return Results.BadRequest(Result<Guid>.Fail("The requested resource could not be processed."));
 
         problem.Title = req.Title;
+        problem.Company = req.Company;
         problem.Description = req.Description;
         problem.Difficulty = req.Difficulty;
         problem.TagsJson = req.TagsJson;

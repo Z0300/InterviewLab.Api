@@ -14,7 +14,7 @@ public class UpdateSolution
         bool IsCanonical,
         int QualityScore,
         string? Source);
-
+    
     public sealed class Validator : AbstractValidator<Request>
     {
         public Validator()

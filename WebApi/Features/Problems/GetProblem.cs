@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Endpoints;
+using WebApi.Models.Enums;
 
 namespace WebApi.Features.Problems;
 
 public class GetProblem
 {
-    public record Response(
+    private record Response(
         Guid Id,
         string Title,
+        string Company,
         string Description,
-        string Difficulty,
-        string? TagsJson);
+        Difficulty Difficulty,
+        string[]? TagsJson);
 
     public class Endpoint : IEndpoint
     {
@@ -33,6 +35,7 @@ public class GetProblem
         var response = new Response(
             problem.Id,
             problem.Title,
+            problem.Company,
             problem.Description,
             problem.Difficulty,
             problem.TagsJson);

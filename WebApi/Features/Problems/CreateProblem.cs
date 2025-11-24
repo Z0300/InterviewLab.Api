@@ -1,6 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Text.Json;
+using FluentValidation;
 using WebApi.Endpoints;
 using WebApi.Models;
+using WebApi.Models.Enums;
 
 namespace WebApi.Features.Problems;
 
@@ -8,9 +10,10 @@ public class CreateProblem
 {
     public record Request(
         string Title,
+        string Company,
         string Description,
-        string Difficulty,
-        string TagsJson);
+        Difficulty Difficulty,
+        string[]? TagsJson);
 
     private record Response(Guid Id, string Title);
 
@@ -26,11 +29,7 @@ public class CreateProblem
                 .NotEmpty();
 
             RuleFor(x => x.Difficulty)
-                .NotEmpty()
-                .MaximumLength(20);
-
-            RuleFor(x => x.TagsJson)
-                .MaximumLength(300);
+                .IsInEnum();
         }
     }
 
@@ -59,9 +58,10 @@ public class CreateProblem
         var problem = new Problem
         {
             Id = Guid.NewGuid(),
+            Company = req.Company,
             Title = req.Title,
             Description = req.Description,
-            Difficulty = req.Difficulty,
+            Difficulty = Enum.Parse<Difficulty>(req.Difficulty.ToString()),
             TagsJson = req.TagsJson
         };
 

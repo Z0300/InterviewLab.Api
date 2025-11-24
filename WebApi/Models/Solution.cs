@@ -11,8 +11,8 @@ public class Solution
 
     [Required, MaxLength(30)] public string Language { get; set; } = "csharp";
 
-    [Required, MaxLength(5000)] public required string Code { get; set; }
-    [MaxLength(5000)] public string? Explanation { get; set; } // markdown
+    [Required, MaxLength(4000)] public required string Code { get; set; }
+    [MaxLength(4000)] public string? Explanation { get; set; } // markdown
 
     public bool IsCanonical { get; set; }
     public int QualityScore { get; set; }

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Endpoints;
+using WebApi.Models.Enums;
 
 namespace WebApi.Features.Solutions;
 
 public class GetSolution
 {
-    public record Response(
+    private record Response(
         Guid Id,
         ProblemResponse Problem,
         string Language,
@@ -15,12 +16,12 @@ public class GetSolution
         int QualityScore,
         string? Source);
 
-    public record ProblemResponse(
+    private record ProblemResponse(
         Guid Id,
         string Title,
         string Description,
-        string Difficulty,
-        string? TagsJson);
+        Difficulty Difficulty,
+        string[]? TagsJson);
 
     public class Endpoint : IEndpoint
     {
