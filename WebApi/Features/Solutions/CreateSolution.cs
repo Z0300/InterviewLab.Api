@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using WebApi.Endpoints;
-using WebApi.Extensions;
 using WebApi.Models;
 
 namespace WebApi.Features.Solutions;

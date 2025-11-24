@@ -29,21 +29,26 @@ namespace WebApi.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("company");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)")
                         .HasColumnName("description");
 
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                    b.Property<int>("Difficulty")
+                        .HasMaxLength(10)
+                        .HasColumnType("int")
                         .HasColumnName("difficulty");
 
-                    b.Property<string>("TagsJson")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                    b.PrimitiveCollection<string>("TagsJson")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("tags_json");
 
                     b.Property<string>("Title")
@@ -67,8 +72,8 @@ namespace WebApi.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)")
                         .HasColumnName("code");
 
                     b.Property<DateTime>("CreatedAt")
@@ -76,8 +81,8 @@ namespace WebApi.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("Explanation")
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)")
                         .HasColumnName("explanation");
 
                     b.Property<bool>("IsCanonical")

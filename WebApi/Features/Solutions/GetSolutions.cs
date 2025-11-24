@@ -5,7 +5,7 @@ namespace WebApi.Features.Solutions;
 
 public class GetSolutions
 {
-    public record Response(
+    private record Response(
         Guid Id,
         string Language,
         string Code,

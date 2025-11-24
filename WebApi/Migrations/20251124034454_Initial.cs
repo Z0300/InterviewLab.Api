@@ -17,9 +17,10 @@ namespace WebApi.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
-                    difficulty = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    tags_json = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
+                    company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    difficulty = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    tags_json = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,8 +47,8 @@ namespace WebApi.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     problem_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     language = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    code = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
-                    explanation = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true),
+                    code = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    explanation = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     is_canonical = table.Column<bool>(type: "bit", nullable: false),
                     quality_score = table.Column<int>(type: "int", nullable: false),
                     source = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
