@@ -6,13 +6,22 @@ namespace WebApi.Features.Problems;
 
 public class GetProblem
 {
+    private record SolutionResponse(
+        string Language,
+        string Code,
+        string? Explanation,
+        bool IsCanonical,
+        int QualityScore,
+        string? Source);
+
     private record Response(
         Guid Id,
         string Title,
         string Company,
         string Description,
         Difficulty Difficulty,
-        string[]? TagsJson);
+        string[]? TagsJson,
+        List<SolutionResponse>? Solutions);
 
     public class Endpoint : IEndpoint
     {
@@ -26,6 +35,7 @@ public class GetProblem
     private static async Task<IResult> Handler(Guid id, AppDbContext context)
     {
         var problem = await context.Problems
+            .Include(c => c.Solutions)
             .AsNoTracking()
             .FirstOrDefaultAsync(e => e.Id == id);
 
@@ -38,7 +48,18 @@ public class GetProblem
             problem.Company,
             problem.Description,
             problem.Difficulty,
-            problem.TagsJson);
+            problem.TagsJson,
+            problem.Solutions
+                .Select(solution => new SolutionResponse(
+                    solution.Language,
+                    solution.Code,
+                    solution.Explanation,
+                    solution.IsCanonical,
+                    solution.QualityScore,
+                    solution.Source
+                ))
+                .ToList()
+        );
 
         return Results.Ok(Result<Response>.Ok(
             response,
