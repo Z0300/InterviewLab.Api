@@ -7,6 +7,7 @@ namespace WebApi.Features.Problems;
 public class GetProblem
 {
     private record SolutionResponse(
+        Guid Id,
         string Language,
         string Code,
         string? Explanation,
@@ -51,6 +52,7 @@ public class GetProblem
             problem.TagsJson,
             problem.Solutions
                 .Select(solution => new SolutionResponse(
+                    solution.Id,
                     solution.Language,
                     solution.Code,
                     solution.Explanation,
