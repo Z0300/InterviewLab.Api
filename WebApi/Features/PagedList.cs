@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApi.Features.Problems;
+namespace WebApi.Features;
 
 public class PagedList<T>
 {

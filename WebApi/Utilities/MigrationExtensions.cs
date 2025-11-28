@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApi.Extensions;
+namespace WebApi.Utilities;
 
 public static class MigrationExtensions
 {
