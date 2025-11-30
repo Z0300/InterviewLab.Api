@@ -13,7 +13,8 @@ public class GetCurrentUser
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
             builder.MapGet("api/auth/me", Handler)
-                .WithTags("Auth");
+                .WithTags("Auth")
+                .RequireAuthorization();
         }
     }
 

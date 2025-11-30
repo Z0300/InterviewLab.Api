@@ -38,7 +38,8 @@ public class CreateProblem
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
             builder.MapPost("api/problems", Handler)
-                .WithTags("Problems");
+                .WithTags("Problems")
+                .RequireAuthorization();
         }
     }
 

@@ -37,7 +37,8 @@ public class UpdateProblem
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
             builder.MapPut("api/problems" + "/{id:guid}", Handler)
-                .WithTags("Problems");
+                .WithTags("Problems")
+                .RequireAuthorization();
         }
     }
 
