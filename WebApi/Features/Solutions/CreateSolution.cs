@@ -43,7 +43,8 @@ public static class CreateSolution
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
             builder.MapPost("api/solutions", Handler)
-                .WithTags("Solutions");
+                .WithTags("Solutions")
+                .RequireAuthorization();
         }
     }
 

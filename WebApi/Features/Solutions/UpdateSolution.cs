@@ -14,7 +14,7 @@ public class UpdateSolution
         bool IsCanonical,
         int QualityScore,
         string? Source);
-    
+
     public sealed class Validator : AbstractValidator<Request>
     {
         public Validator()
@@ -40,7 +40,8 @@ public class UpdateSolution
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
             builder.MapPut("api/solutions" + "/{id:guid}", Handler)
-                .WithTags("Solutions");
+                .WithTags("Solutions")
+                .RequireAuthorization();
         }
     }
 

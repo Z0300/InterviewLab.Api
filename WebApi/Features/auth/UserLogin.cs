@@ -25,7 +25,7 @@ public class UserLogin
     {
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
-            builder.MapPost("api/auth", Handler)
+            builder.MapPost("api/auth/login", Handler)
                 .WithTags("Auth");
         }
     }

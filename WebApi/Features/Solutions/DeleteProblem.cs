@@ -9,7 +9,8 @@ public class DeleteProblem
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
             app.MapDelete("api/solutions" + "/{id:guid}", Handler)
-                .WithTags("Solutions");
+                .WithTags("Solutions")
+                .RequireAuthorization();
         }
     }
 
