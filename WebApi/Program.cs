@@ -8,6 +8,7 @@ using WebApi;
 using WebApi.Endpoints;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using WebApi.Utilities;
 
 Env.Load();
@@ -16,13 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = Environment.GetEnvironmentVariable("DEFAULT_CONNECTION");
 var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-
-if (string.IsNullOrEmpty(jwtSecretKey))
-{
-    // Log an error and potentially stop the app startup if the key is mandatory
-    throw new InvalidOperationException("JWT SecretKey configuration value is missing or empty.");
-}
-
 
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<TokenProvider>();
@@ -34,7 +28,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddEndpoints();
 
-builder.Services.AddSwaggerGen(o => { o.CustomSchemaIds(id => id.FullName!.Replace('+', '-')); });
+builder.Services.AddSwaggerGen(o =>
+{
+    o.SwaggerDoc("v1", new OpenApiInfo { Title = "Interview Labs API", Version = "v1" });
+    o.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
+});
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
@@ -61,6 +59,8 @@ builder.Services.AddAuthentication(o =>
         ClockSkew = TimeSpan.Zero
     };
 });
+
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -92,10 +92,10 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 }
 
-
-app.MapEndpoints();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapEndpoints();
 
 app.Run();
