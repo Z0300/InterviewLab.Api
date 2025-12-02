@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Endpoints;
-using WebApi.Models;
 using WebApi.Utilities;
 
 namespace WebApi.Features.auth;
 
-public class UserLogin
+public class UserRefreshToken
 {
-    public record Request(string Username, string Password);
+    public record Request(string RefreshToken);
 
     private record Response(string AccessToken, string RefreshToken);
 
@@ -16,10 +15,7 @@ public class UserLogin
     {
         public Validator()
         {
-            RuleFor(x => x.Username)
-                .NotEmpty();
-
-            RuleFor(x => x.Password)
+            RuleFor(x => x.RefreshToken)
                 .NotEmpty();
         }
     }
@@ -28,7 +24,7 @@ public class UserLogin
     {
         public void MapEndpoint(IEndpointRouteBuilder builder)
         {
-            builder.MapPost("api/auth/login", Handler)
+            builder.MapPost("api/auth/refresh-token", Handler)
                 .WithTags("Auth");
         }
     }
@@ -50,33 +46,25 @@ public class UserLogin
             return Results.BadRequest(Result<Response>.ValidationError(errors));
         }
 
-        var user = await context.Users
+        var refreshToken = await context.RefreshTokens
+            .Include(x => x.User)
             .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Username == req.Username, cancellationToken);
+            .FirstOrDefaultAsync(u => u.Token == req.RefreshToken, cancellationToken);
 
-        if (user is null)
-            return Results.BadRequest(Result<Response>.Fail("Login failed. Please try again."));
+        if (refreshToken is null || refreshToken.ExpiresAt < DateTime.UtcNow)
+            return Results.BadRequest(Result<Response>.Fail("Refresh token not found"));
 
-        var verified = PasswordHasher.Verify(req.Password, user.PasswordHash);
+        var accessToken = tokenProvider.Create(refreshToken.User!);
 
-        if (!verified)
-            return Results.BadRequest(Result<Response>.Fail("Login failed. Please try again."));
+        var (newRefreshToken, refreshExpiresAt) = tokenProvider.GenerateRefreshToken();
 
-        var accessToken = tokenProvider.Create(user);
+        refreshToken.Token = newRefreshToken;
+        refreshToken.ExpiresAt = refreshExpiresAt;
 
-        var (refreshToken, refreshExpiresAt) = tokenProvider.GenerateRefreshToken();
-
-        var rt = new RefreshToken
-        {
-            Id = Guid.NewGuid(),
-            Token = refreshToken,
-            UserId = user.Id,
-            ExpiresAt = refreshExpiresAt
-        };
-
-        context.RefreshTokens.Add(rt);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(Result<Response>.Ok(new Response(accessToken, refreshToken)));
+        return Results.Ok(Result<Response>.Ok(new Response(
+            accessToken,
+            refreshToken.Token)));
     }
 }

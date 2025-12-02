@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -33,5 +34,13 @@ internal sealed class TokenProvider(IConfiguration configuration)
         var token = handler.CreateToken(tokenDescriptor);
 
         return token;
+    }
+
+    public (string Token, DateTime ExpiresAt) GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+        var token = Convert.ToBase64String(randomBytes);
+        var expires = DateTime.UtcNow.AddDays(configuration.GetValue<int>("Jwt:RefreshTokenInDays"));
+        return (token, expires);
     }
 }

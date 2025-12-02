@@ -3,6 +3,7 @@
     image: itl-api
     environment:
       DEFAULT_CONNECTION: "${DEFAULT_CONNECTION}"
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
     depends_on:
       - sqlserver
     build:
