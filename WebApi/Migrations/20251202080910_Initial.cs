@@ -65,6 +65,31 @@ namespace WebApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "refresh_tokens",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    token = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    user_id = table.Column<Guid>(type: "uniqueidentifier", maxLength: 100, nullable: false),
+                    expires_at = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_refresh_tokens", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_refresh_tokens_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_refresh_tokens_user_id",
+                table: "refresh_tokens",
+                column: "user_id");
+
             migrationBuilder.CreateIndex(
                 name: "ix_solutions_problem_id",
                 table: "solutions",
@@ -74,6 +99,9 @@ namespace WebApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "refresh_tokens");
+
             migrationBuilder.DropTable(
                 name: "solutions");
 
