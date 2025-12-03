@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using DotNetEnv;
@@ -21,6 +22,7 @@ var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<TokenProvider>();
 builder.Services.AddSingleton<PasswordHasher>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString)
@@ -97,5 +99,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapEndpoints();
+
+app.MapGet("/api/me", (HttpContext httpContext) =>
+{
+    var user = httpContext.User;
+
+    if (user?.Identity?.IsAuthenticated != true)
+        return Results.Unauthorized();
+
+
+    return Results.Ok(new
+    {
+        Id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+        Username = user.Identity.Name,
+    });
+});
 
 app.Run();
